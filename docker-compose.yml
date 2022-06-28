@@ -21,7 +21,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@db_mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@ssMercury_mongo:27017/
     depends_on:
       - db_mongo
 
