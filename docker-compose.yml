@@ -1,0 +1,32 @@
+version: "3"
+services:
+
+  api:
+    build: .
+    container_name: ssMercury_api
+    ports:
+      - 1105:8080
+
+  db_mongo:
+    image: mongo
+    container_name: ssMercury_mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: ss_mercury
+    volumes:
+      - .data/mongodb:/data/db
+
+  db_mongo-express:
+    image: mongo-express
+    container_name: ssMercury_mongoExpress
+    ports:
+      - 18081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@db_mongo:27017/
+    depends_on:
+      - db_mongo
