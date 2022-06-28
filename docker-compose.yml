@@ -1,12 +1,6 @@
 version: "3"
 services:
 
-  api:
-    build: .
-    container_name: ssMercury_api
-    ports:
-      - 1105:8080
-
   db_mongo:
     image: mongo
     container_name: ssMercury_mongo
@@ -30,3 +24,9 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://admin:admin@db_mongo:27017/
     depends_on:
       - db_mongo
+
+  api:
+    build: .
+    container_name: ssMercury_api
+    ports:
+      - 1105:8080
