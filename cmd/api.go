@@ -34,6 +34,7 @@ func StartHttp(ctx context.Context, containerDI *infrastructure.ContainerDI) {
 	app.Get("/verify/:user_id/:points_id", containerDI.UserHandler.VerifyUser)
 	app.Post("/user", containerDI.UserHandler.CreateUser)
 	app.Post("/login", containerDI.UserHandler.LoginUser)
+	app.Post("/points_gg/login_game/:user_id/:points_id", containerDI.PointsHandler.LoginGame)
 	err := app.Listen(":8080")
 	if err != nil {
 		panic(err)

@@ -2,19 +2,11 @@ package service
 
 import (
 	"ssMercurio/entities"
+	"ssMercurio/infrastructure/jwt"
+	"ssMercurio/user_case/repository"
 	"ssMercurio/user_case/request"
 	"ssMercurio/user_case/response"
 )
-
-type UserRepository interface {
-	Create(data entities.User) error
-	Login(login entities.Login) (user entities.User, err error)
-}
-
-type JwtToken interface {
-	Create(id, email, cellphone, idPoints string) (string, error)
-	Validation(tokenString string) (entities.Token, error)
-}
 
 type CryptoPassword interface {
 	Encrypt(password string) (string, error)
@@ -22,12 +14,12 @@ type CryptoPassword interface {
 }
 
 type UserService struct {
-	UserRepository UserRepository
-	JwtToken       JwtToken
+	UserRepository repository.RepositoryUser
+	JwtToken       jwt.JwtToken
 	CryptoPassword CryptoPassword
 }
 
-func NewUserService(UserRepository UserRepository, JwtToken JwtToken, CryptoPassword CryptoPassword) UserService {
+func NewUserService(UserRepository repository.RepositoryUser, JwtToken jwt.JwtToken, CryptoPassword CryptoPassword) UserService {
 	return UserService{UserRepository, JwtToken, CryptoPassword}
 }
 

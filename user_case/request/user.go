@@ -13,7 +13,7 @@ type Login struct {
 
 type Verify struct {
 	ID        string `json:"id"`
-	IDPoints  string `json:"uuid"`
+	IDPoints  string `json:"id_points"`
 	Email     string `json:"email"`
 	Cellphone string `json:"cellphone"`
 	Token     string `json:"token"`

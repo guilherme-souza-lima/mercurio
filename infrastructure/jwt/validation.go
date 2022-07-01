@@ -6,6 +6,11 @@ import (
 	"ssMercurio/entities"
 )
 
+type JwtToken interface {
+	Create(id, email, cellphone, idPoints string) (string, error)
+	Validation(tokenString string) (entities.Token, error)
+}
+
 type TokenJwt struct {
 	AccessSecret string
 }

@@ -15,7 +15,9 @@ type ContainerDI struct {
 	Config         Config
 	MongoDB        *mongo.Client
 	UserRepository repository.UserRepository
+	PointsService  service.PointsService
 	UserService    service.UserService
+	PointsHandler  handler.PointsHandler
 	UserHandler    handler.UserHandler
 	JwtToken       jwt.TokenJwt
 	CryptoPassword crypto.CryptoPassword
@@ -47,6 +49,8 @@ func (c *ContainerDI) buildValidation() {
 func (c *ContainerDI) build() {
 	c.UserRepository = repository.NewUserRepository(c.MongoDB)
 	c.UserService = service.NewUserService(c.UserRepository, c.JwtToken, c.CryptoPassword)
+	c.PointsService = service.NewPointsService(c.JwtToken, c.UserRepository)
 	c.UserHandler = handler.NewUserHandler(c.UserService)
+	c.PointsHandler = handler.NewPointsHandler(c.PointsService)
 }
 func (c *ContainerDI) ShutDown() {}
