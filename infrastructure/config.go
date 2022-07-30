@@ -14,6 +14,9 @@ type Config struct {
 	DbUserMongo     string
 	DbPasswordMongo string
 	AccessSecret    string
+	BrokerElastic1  string
+	BrokerElastic2  string
+	BrokerElasticDB string
 }
 
 func NewConfig() Config {
@@ -31,5 +34,8 @@ func NewConfig() Config {
 		DbUserMongo:     os.Getenv("USER_MONGO"),
 		DbPasswordMongo: os.Getenv("PASSWORD_MONGO"),
 		AccessSecret:    os.Getenv("ACCESS_SECRET"),
+		BrokerElastic1:  os.Getenv("BROKER_ELASTIC"),
+		BrokerElastic2:  os.Getenv("BROKER_ELASTIC_2"),
+		BrokerElasticDB: os.Getenv("BROKER_ELASTIC_DB"),
 	}
 }

@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	myLib_elastic "github.com/guilherme-souza-lima/solar-system/elastic"
 	"go.mongodb.org/mongo-driver/mongo"
 	"ssMercurio/infrastructure/crypto"
 	"ssMercurio/infrastructure/database"
@@ -21,6 +22,7 @@ type ContainerDI struct {
 	UserHandler    handler.UserHandler
 	JwtToken       jwt.TokenJwt
 	CryptoPassword crypto.CryptoPassword
+	Logger         myLib_elastic.LoggerElastic
 }
 
 func NewContainerDI(config Config) *ContainerDI {
@@ -37,6 +39,9 @@ func NewContainerDI(config Config) *ContainerDI {
 	}
 	container.MongoDB = dbmongo.InitMongo(&mongoConfig)
 
+	brokers := []string{container.Config.BrokerElastic1, container.Config.BrokerElastic2}
+	container.Logger = myLib_elastic.NewLoggerElastic(container.Config.BrokerElasticDB, brokers)
+
 	container.buildValidation()
 	container.build()
 	return container
@@ -50,7 +55,7 @@ func (c *ContainerDI) build() {
 	c.UserRepository = repository.NewUserRepository(c.MongoDB)
 	c.UserService = service.NewUserService(c.UserRepository, c.JwtToken, c.CryptoPassword)
 	c.PointsService = service.NewPointsService(c.JwtToken, c.UserRepository)
-	c.UserHandler = handler.NewUserHandler(c.UserService)
+	c.UserHandler = handler.NewUserHandler(c.UserService, c.Logger)
 	c.PointsHandler = handler.NewPointsHandler(c.PointsService)
 }
 func (c *ContainerDI) ShutDown() {}
