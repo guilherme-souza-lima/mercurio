@@ -28,6 +28,7 @@ func (p PointsHandler) LoginGame(c *fiber.Ctx) error {
 	var verify request.PointsRequest
 	if err := c.BodyParser(&verify); err != nil {
 		strError := "Error body parser request. Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		p.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/points_gg LoginGame()", strError, userID))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
@@ -37,11 +38,13 @@ func (p PointsHandler) LoginGame(c *fiber.Ctx) error {
 	result, err := p.PointsService.VerifyPoints(verify)
 	if err != nil {
 		strError := "Error validation. Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		p.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/points_gg p.PointsService.VerifyPoints(verify)", strError, userID))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
 	}
 
+	utils.LoggerWriting("Info", "success")
 	str := fmt.Sprintf("%#v", verify)
 	p.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusOK, strconv.FormatBool(result), str, userID))
 

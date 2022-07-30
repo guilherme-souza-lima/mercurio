@@ -29,16 +29,19 @@ func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 	var user request.User
 	if err := c.BodyParser(&user); err != nil {
 		strError := "Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/user CreateUser()", strError, "not logged in"))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
 	}
 	if err := u.UserService.Create(user); err != nil {
 		strError := "Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/user u.UserService.Create(user)", strError, "not logged in"))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
 	}
+	utils.LoggerWriting("Info", "success")
 	str := fmt.Sprintf("%#v", user)
 	u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusOK, "Success", str, "Create User Success"))
 	return c.Status(fiber.StatusOK).JSON("success")
@@ -48,12 +51,14 @@ func (u UserHandler) LoginUser(c *fiber.Ctx) error {
 	var user request.Login
 	if err := c.BodyParser(&user); err != nil {
 		strError := "Error body parser request. Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/user LoginUser()", strError, "not logged in"))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
 	}
 	if user.Login == "" || user.Password == "" {
 		strError := "Error field not filled. Error: username or password"
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusNotFound,
 			"Handler/user LoginUser()", strError, "not logged in"))
 		return c.Status(fiber.StatusNotFound).JSON(strError)
@@ -62,11 +67,13 @@ func (u UserHandler) LoginUser(c *fiber.Ctx) error {
 	result, err := u.UserService.Login(user)
 	if err != nil {
 		strError := "Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusNotFound,
 			"Handler/user u.UserService.Login(user)", strError, "not logged in"))
 		return c.Status(fiber.StatusNotFound).JSON(strError)
 	}
 
+	utils.LoggerWriting("Info", "success")
 	str := fmt.Sprintf("%#v", result)
 	u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusOK, "Success", str, result.ID))
 
@@ -79,6 +86,7 @@ func (u UserHandler) VerifyUser(c *fiber.Ctx) error {
 	var verify request.Verify
 	if err := c.BodyParser(&verify); err != nil {
 		strError := "Error body parser request. Error: " + err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusBadRequest,
 			"Handler/user VerifyUser()", strError, "not verify user"))
 		return c.Status(fiber.StatusBadRequest).JSON(strError)
@@ -90,11 +98,13 @@ func (u UserHandler) VerifyUser(c *fiber.Ctx) error {
 
 	if err != nil {
 		strError := err.Error()
+		utils.LoggerWriting("Error", strError)
 		u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusUnauthorized,
 			"Handler/user VerifyUser()", strError, "Unauthorized"))
 		return c.Status(fiber.StatusUnauthorized).JSON(strError)
 	}
 
+	utils.LoggerWriting("Info", "success")
 	str := fmt.Sprintf("%#v", verify)
 	u.Logger.LoggerElasticsearch(utils.MappingLoggerElastic(fiber.StatusOK, strconv.FormatBool(result), str, userID))
 	return c.Status(fiber.StatusOK).JSON(result)

@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"ssMercurio/entities"
+	"ssMercurio/utils"
 )
 
 type RepositoryUser interface {
@@ -33,6 +34,7 @@ func (m UserRepository) Create(user entities.User) error {
 	coll := m.db.Database(entities.DATABASE).Collection(entities.COLLECTION)
 	_, err := coll.InsertOne(context.Background(), user)
 	if err != nil {
+		utils.LoggerWriting("Warn", "ERROR REPOSITORY CREATE: "+err.Error())
 		return err
 	}
 	return nil
@@ -62,6 +64,7 @@ func (m UserRepository) UpdatePointsUser(id string, point int) error {
 	_, err := collection.UpdateOne(context.Background(), bson.M{"id": id},
 		bson.M{"$set": bson.M{"points.ggpoints": point}})
 	if err != nil {
+		utils.LoggerWriting("Warn", "ERROR REPOSITORY UPDATE POINTS: "+err.Error())
 		return err
 	}
 	return nil

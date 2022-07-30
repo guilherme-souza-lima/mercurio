@@ -5,6 +5,7 @@ import (
 	"ssMercurio/infrastructure/jwt"
 	"ssMercurio/user_case/repository"
 	"ssMercurio/user_case/request"
+	"ssMercurio/utils"
 )
 
 type PointsService struct {
@@ -19,6 +20,7 @@ func NewPointsService(JwtToken jwt.JwtToken, UserRepository repository.Repositor
 func (p PointsService) VerifyPoints(data request.PointsRequest) (bool, error) {
 	result, err := p.JwtToken.Validation(data.Verify.Token)
 	if err != nil {
+		utils.LoggerWriting("Error", "ERROR SERVICE VERIFY POINTS: "+err.Error())
 		return false, err
 	}
 	if data.Verify.ID == result.ID &&
@@ -28,6 +30,7 @@ func (p PointsService) VerifyPoints(data request.PointsRequest) (bool, error) {
 		user, _ := p.UserRepository.GetUserById(data.Verify.ID)
 		point, errPoint := calculation(data.Points.Value, user.Points.GGPoints)
 		if errPoint != nil {
+			utils.LoggerWriting("Warn", "ERROR SERVICE CALCULATION: "+err.Error())
 			return false, errPoint
 		}
 		update := p.UserRepository.UpdatePointsUser(data.Verify.ID, point)

@@ -6,6 +6,7 @@ import (
 	"ssMercurio/user_case/repository"
 	"ssMercurio/user_case/request"
 	"ssMercurio/user_case/response"
+	"ssMercurio/utils"
 )
 
 type CryptoPassword interface {
@@ -29,6 +30,7 @@ func (u UserService) Create(data request.User) error {
 
 	newPassword, err := u.CryptoPassword.Encrypt(data.Password)
 	if err != nil {
+		utils.LoggerWriting("Error", "ERROR SERVICE CREATE: "+err.Error())
 		return err
 	}
 	result.Password = newPassword
@@ -48,6 +50,7 @@ func (u UserService) Login(data request.Login) (response.UserLogin, error) {
 
 	user, err := u.UserRepository.Login(result)
 	if err != nil {
+		utils.LoggerWriting("Error", "ERROR SERVICE LOGIN: "+err.Error())
 		return login, err
 	}
 	login.ID = user.ID
@@ -57,6 +60,7 @@ func (u UserService) Login(data request.Login) (response.UserLogin, error) {
 	login.Points.GGPoints = user.Points.GGPoints
 	token, errToken := u.JwtToken.Create(login.ID, login.Email, login.Cellphone, login.Points.ID)
 	if err != nil {
+		utils.LoggerWriting("Error", "ERROR SERVICE LOGIN TOKEN: "+err.Error())
 		return login, errToken
 	}
 	login.Token = token
@@ -66,6 +70,7 @@ func (u UserService) Login(data request.Login) (response.UserLogin, error) {
 func (u UserService) Verify(data request.Verify) (bool, error) {
 	result, err := u.JwtToken.Validation(data.Token)
 	if err != nil {
+		utils.LoggerWriting("Error", "ERROR SERVICE VERIFY: "+err.Error())
 		return false, err
 	}
 	if data.ID == result.ID &&
