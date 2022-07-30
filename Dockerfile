@@ -5,6 +5,7 @@ COPY cmd /app/cmd
 COPY entities /app/entities
 COPY infrastructure /app/infrastructure
 COPY user_case /app/user_case
+COPY utils /app/utils
 COPY .env /app/.env
 COPY go.mod /app/go.mod
 COPY go.sum /app/go.sum
