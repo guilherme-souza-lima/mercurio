@@ -39,14 +39,15 @@ func NewContainerDI(config Config) *ContainerDI {
 	}
 	container.MongoDB = dbmongo.InitMongo(&mongoConfig)
 
-	brokers := []string{container.Config.BrokerElastic1, container.Config.BrokerElastic2}
-	container.Logger = myLib_elastic.NewLoggerElastic(container.Config.BrokerElasticDB, brokers)
-
+	container.buildLogger()
 	container.buildValidation()
 	container.build()
 	return container
 }
-
+func (c *ContainerDI) buildLogger() {
+	brokers := []string{c.Config.BrokerElastic1, c.Config.BrokerElastic2}
+	c.Logger = myLib_elastic.NewLoggerElastic(c.Config.BrokerElasticDB, brokers)
+}
 func (c *ContainerDI) buildValidation() {
 	c.JwtToken = jwt.NewTokenJwt(c.Config.AccessSecret)
 	c.CryptoPassword = crypto.NewCryptoPassword(c.Config.AccessSecret)
@@ -56,6 +57,6 @@ func (c *ContainerDI) build() {
 	c.UserService = service.NewUserService(c.UserRepository, c.JwtToken, c.CryptoPassword)
 	c.PointsService = service.NewPointsService(c.JwtToken, c.UserRepository)
 	c.UserHandler = handler.NewUserHandler(c.UserService, c.Logger)
-	c.PointsHandler = handler.NewPointsHandler(c.PointsService)
+	c.PointsHandler = handler.NewPointsHandler(c.PointsService, c.Logger)
 }
 func (c *ContainerDI) ShutDown() {}
