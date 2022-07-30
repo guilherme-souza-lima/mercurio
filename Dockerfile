@@ -11,5 +11,6 @@ COPY go.sum /app/go.sum
 COPY main.go /app/main.go
 
 RUN go mod download
+RUN go mod tidy
 # RUN go build -o build ./src/main.go
 ENTRYPOINT go run main.go httpserver
