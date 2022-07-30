@@ -3,6 +3,9 @@ package utils
 import "github.com/gofrs/uuid"
 
 func GeneratorUUid() string {
-	uuid, _ := uuid.NewV4()
+	uuid, err := uuid.NewV4()
+	if err != nil {
+		return err.Error()
+	}
 	return uuid.String()
 }
