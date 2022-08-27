@@ -7,6 +7,21 @@ import (
 	"time"
 )
 
+func MappingLoggerElasticNew(statusCode int, url, message, idUser, nameUser, nickUser string) myLib_entity.History {
+	return myLib_entity.History{
+		ID:         GeneratorUUid(),
+		URL:        url,
+		StatusCode: statusCode,
+		Message:    message,
+		CreateAt:   time.Now(),
+		User: myLib_entity.User{
+			ID:   idUser,
+			Name: nameUser,
+			Nick: nickUser,
+		},
+	}
+}
+
 func MappingLoggerElastic(statusCode int, level, message, id string) myLib_entity.MappingElastic {
 	return myLib_entity.MappingElastic{
 		StatusCode: statusCode,

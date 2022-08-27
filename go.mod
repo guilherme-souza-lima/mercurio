@@ -6,7 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gofiber/fiber/v2 v2.34.1
 	github.com/gofrs/uuid v4.2.0+incompatible
-	github.com/guilherme-souza-lima/solar-system v1.0.2
+	github.com/guilherme-souza-lima/solar-system v1.0.3
 	github.com/joho/godotenv v1.4.0
 	github.com/spf13/cobra v1.5.0
 	go.mongodb.org/mongo-driver v1.9.1
